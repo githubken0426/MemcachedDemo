@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="
+	   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd  
+       http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd  
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd  
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd  
+       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+	
+	<!-- spring3.0之前配置 -->
+	<bean name="server1" class="java.net.InetSocketAddress">
+		<constructor-arg>
+			<value>${memcached.server1.host}</value>
+		</constructor-arg>
+		<constructor-arg>
+			<value>${memcached.server1.port}</value>
+		</constructor-arg>
+	</bean>
+	<bean name="server2" class="java.net.InetSocketAddress">
+		<constructor-arg>
+			<value>${memcached.server2.host}</value>
+		</constructor-arg>
+		<constructor-arg>
+			<value>${memcached.server2.port}</value>
+		</constructor-arg>
+	</bean>
+	<bean id="memcachedClientBuilder" class="net.rubyeye.xmemcached.XMemcachedClientBuilder"
+		p:connectionPoolSize="${memcached.connectionPoolSize}" p:failureMode="${memcached.failureMode}">
+		<!--
+			XMemcachedClientBuilder have two arguments.First is server list,and
+			second is weights array.
+		-->
+		<property name="servers">
+			<value>${memcached.server1.host}:${memcached.server1.port}
+				${memcached.server2.host}:${memcached.server2.port}</value>
+		</property>
+		<!-- server's weights -->
+		<property name="weights">
+			<list>
+				<value>6</value>
+				<value>5</value>
+			</list>
+		</property>
+		<!-- AuthInfo map,only valid on 1.2.5 or later version -->
+		<property name="authInfoMap">
+			<map>
+				<entry key-ref="server1">
+					<bean class="net.rubyeye.xmemcached.auth.AuthInfo"
+						factory-method="typical">
+						<constructor-arg index="0">
+							<value>cacheuser</value>
+						</constructor-arg>
+						<constructor-arg index="1">
+							<value>123456</value>
+						</constructor-arg>
+					</bean>
+				</entry>
+			</map>
+		</property>
+
+		<!--
+			Use binary protocol
+			BinaryCommandFactory,TextCommandFactory(default),KestrelCommandFactory
+		-->
+		<property name="commandFactory">
+			<bean class="net.rubyeye.xmemcached.command.BinaryCommandFactory" />
+		</property>
+		<!--
+			Distributed strategy
+			分布策略，一致性哈希KetamaMemcachedSessionLocator或者ArraySessionLocator(默认)
+		-->
+		<property name="sessionLocator">
+			<bean class="net.rubyeye.xmemcached.impl.KetamaMemcachedSessionLocator"></bean>
+		</property>
+		<!-- Serializing transcoder -->
+		<property name="transcoder">
+			<bean class="net.rubyeye.xmemcached.transcoders.SerializingTranscoder" />
+		</property>
+		<!--
+			ByteBuffer allocator
+			IoBuffer分配器，默认为SimpleBufferAllocator，可选CachedBufferAllocator(不推荐)
+		-->
+		<property name="bufferAllocator">
+			<bean class="net.rubyeye.xmemcached.buffer.SimpleBufferAllocator"></bean>
+		</property>
+	</bean>
+
+</beans>

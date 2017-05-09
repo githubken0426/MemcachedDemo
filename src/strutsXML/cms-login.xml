@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" 
+"http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>	
+	<package name="loginCMS" extends="struts-default">
+		
+		<!-- 登陆 -->
+		<action name="user_*" class="com.gtercn.travel.action.UserAction" method="{1}">
+			<result name="success" type="redirectAction">shop_shop_list.action</result>
+			<result name="input" >/login.jsp</result>
+		</action>
+	</package>
+</struts>    

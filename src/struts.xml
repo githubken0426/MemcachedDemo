@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" 
+"http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>	
+	 <constant name="struts.i18n.encoding" value="UTF-8"/>
+	 <!-- 指定默认编码集 ，作用于HttpServletRequest的setCharacterEncoding（）
+	 		和freemarker，vilocity的输出 -->
+	<constant name="struts.configuration.xmlreload" value="true"/>
+	<!-- 当struts配置文件修改时是否自动加载 -->
+	<constant name="struts.devMode" value="true"/>
+	<!-- 开发模式下打印详细的错误信息 -->
+	<constant name="struts.ui.theme" value="xhtml"/>
+	<!-- 动态方法调用 -->
+	<constant name="struts.enable.DynamicMethodInvocation" value="true"/>
+	
+	<constant name="struts.objectFactory.spring.autoWire.alwaysRespect" value="true" />
+	<!-- 上传文件大小限制 -->
+	<constant name="struts.multipart.maxSize" value="1000000000000000"/> 
+	
+	<!-- cms -->
+	<include file="strutsXML/cms-login.xml" />
+	<include file="strutsXML/cms-shop.xml" />
+
+</struts>    

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/aop 
+           http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+           http://www.springframework.org/schema/tx
+     	   http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<!-- 采用注释的方式配置bean -->
+	<context:annotation-config />
+	
+	<!-- 配置要扫描的包 -->
+	<context:component-scan base-package="com.gtercn.travel"></context:component-scan>
+	
+	<!--开启切面编程功能.强制使用cglib代理,如果为false则spring会自动选择-->
+	<aop:aspectj-autoproxy  proxy-target-class="true"/>
+	
+	<!-- 读取属性配置文件 -->
+	<context:property-placeholder location="classpath:jdbc.properties" ignore-unresolvable="true"/>
+	
+	<!--<context:property-placeholder location="classpath:memcached.properties" ignore-unresolvable="true"/>-->
+	<!-- 公共资源文件 -->
+	<import resource="classpath:/springXML/spring_common.xml" />
+	<!-- 分布式缓存文件 
+	<import resource="classpath:/springXML/spring_memcached.xml" />-->
+	<!-- 使用xmemcached client -->
+	<import resource="classpath:/springXML/xmemcached_client.xml" />
+	<import resource="classpath:/springXML/redis_template.xml" />
+</beans>
